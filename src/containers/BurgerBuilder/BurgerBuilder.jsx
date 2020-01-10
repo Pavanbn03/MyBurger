@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import AUX from '../../hoc/auxlilary'
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls'
+
 const INGREDIENT_PRICEs={
     salad:20,
     Bacon:30,
@@ -17,7 +18,8 @@ class BurgerBuilder extends Component {
             cheese:0,
             meat:0
         },
-        totalprice:30
+        totalprice:30,
+        purchaseable:false
     }
     addIngredientHandler=(type)=>{
         const olding=this.state.ingredient[type];
@@ -27,6 +29,7 @@ class BurgerBuilder extends Component {
         const oldprice=this.state.totalprice;
         const newprice=oldprice+INGREDIENT_PRICEs[type];
         this.setState({totalprice:newprice,ingredient:updatestateing})
+        this.updatePurchaseHistroy(updatestateing);
 
     }
     removeIngredientHandler=(type)=>{
@@ -41,6 +44,16 @@ class BurgerBuilder extends Component {
         const oldprice=this.state.totalprice;
         const newprice=oldprice-INGREDIENT_PRICEs[type];
         this.setState({totalprice:newprice,ingredient:updatestateing})
+        this.updatePurchaseHistroy(updatestateing);
+    }
+    updatePurchaseHistroy(ingredient){
+        const ingredients={...ingredient};
+       const sum =Object.keys(ingredients).map(igkey=>{
+           return ingredients[igkey];
+       }).reduce((sum,ele)=>{
+           return sum + ele;
+       })
+       this.setState({purchaseable:sum>0})
     }
     render() { 
         const disableinfo={...this.state.ingredient}
@@ -50,7 +63,7 @@ class BurgerBuilder extends Component {
         return ( 
             <AUX>
                 <Burger ingredients={this.state.ingredient} />
-                <BuildControls totalprice={this.state.totalprice} disabled={disableinfo}data={this.state.ingredient} addedingredient={this.addIngredientHandler} removeIngredientHandler={this.removeIngredientHandler} />
+                <BuildControls purchasable={this.state.purchaseable} totalprice={this.state.totalprice} disabled={disableinfo}data={this.state.ingredient} addedingredient={this.addIngredientHandler} removeIngredientHandler={this.removeIngredientHandler} />
 
             </AUX>
          );
