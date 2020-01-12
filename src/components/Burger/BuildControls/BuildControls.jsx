@@ -2,7 +2,7 @@ import React from 'react';
 import BuildControl from './BuildControl/BuildControl'
 import classes from "./BuildControls.css"
 const controls=[
-    {label:"salad",type:"salad"},
+    {label:"Salad",type:"salad"},
     {label:"Meat",type:"meat"},
     {label:"Cheese",type:"cheese"},
     {label:"Bacon",type:"Bacon"},
