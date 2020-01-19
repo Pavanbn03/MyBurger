@@ -7,23 +7,16 @@ import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
 import axios from '../../axios-orders'
 import Spinner from '../../components/UI/Modal/Spinner/Spinner'
 import WithErrorHandling from '../../hoc/withErrorHandling/witherrorhandling';
-import * as actionTypes from '../../store/actions';
+import * as actionTypes from '../../store/actions/index';
 import {connect} from 'react-redux'
 
 
 class BurgerBuilder extends Component {
     state = {  
-        
-        purchaseable:false,
         purchasing:false,
-        shouldloading:false,
-        error:false
     }
     componentDidMount(){
-        // axios.get('https://burgerbuilder03031998.firebaseio.com/ingredients.json')
-        // .then(response=>{
-        //     this.setState({ingredient:response.data})})
-        //     .catch(error=>{this.setState({error:true})})
+        this.props.initingredient()
     }
     updatePurchaseHistroy(ingredient){
         const ingredients={...ingredient};
@@ -54,7 +47,7 @@ class BurgerBuilder extends Component {
         for (let key in disableinfo){
             disableinfo[key]=disableinfo[key]<=0
         }
-        let burger=this.state.error ? <p>Ingredients Can't be Loaded</p>:<Spinner />
+        let burger=this.props.error ? <p>Ingredients Can't be Loaded</p>:<Spinner />
         if(this.props.ingrs){
            burger=( <AUX>
             <Burger ingredients={this.props.ingrs} />
@@ -74,9 +67,6 @@ class BurgerBuilder extends Component {
             ></OrderSummary>
            
             }
-        if(this.state.shouldloading){
-            ordersummary=<Spinner />
-        }
         
         return ( 
             <AUX>
@@ -95,14 +85,16 @@ class BurgerBuilder extends Component {
 const mapStateToProps=state=>{
     return{
         ingrs:state.ingredients,
-        price:state.totalprice
+        price:state.totalprice,
+        error:state.error
     }
 }
 
 const mapDispatchToProps=dispatch=>{
     return{
-        onIngredientAdded : (ingname)=>dispatch({type:actionTypes.ADD_INGREIDENT,ingredientName:ingname}),
-        onIngredientRemoved : (ingname)=>dispatch({type:actionTypes.REMOVE_INGREIDENT,ingredientName:ingname})
+        onIngredientAdded : (ingname)=>dispatch(actionTypes.addingredient(ingname)),
+        onIngredientRemoved : (ingname)=>dispatch(actionTypes.removeingredient(ingname)),
+        initingredient: ()=>dispatch(actionTypes.initingredients())
     }
 }
  
