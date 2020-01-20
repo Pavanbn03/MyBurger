@@ -14,7 +14,6 @@ export const removeingredient=(name)=>{
     }
 }
 export const setingredients =(ingredients)=>{
-    console.log('stored')
     return{
         type:actionTypes.SET_INGREDIENTS,
         ingredient:ingredients
