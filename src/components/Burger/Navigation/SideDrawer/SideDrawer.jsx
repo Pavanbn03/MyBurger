@@ -13,10 +13,10 @@ const sidedrawer = (props) => {
     
     return ( 
        <AUX><BackDrop show={props.open}  clicked={props.closed}/>
-    <div className={attachedclasses.join(' ')}> 
+    <div className={attachedclasses.join(' ')} onClick={props.closed}> 
        <div className={classes.Logo}><Logo /></div> 
         <nav>
-            <NavigationItems />
+            <NavigationItems isAuthenticated={props.isAuth} />
         </nav>
     </div>
              

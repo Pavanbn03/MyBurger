@@ -12,7 +12,7 @@ class Toolbar extends Component{
         <Logo />
         
         <nav className={classes.DesktopOnly}>
-            <NavigationItems />
+            <NavigationItems isAuthenticated={this.props.isAuth} />
         </nav>
     </header>
 

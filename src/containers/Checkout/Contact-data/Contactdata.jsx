@@ -121,6 +121,7 @@ class ContactData extends Component {
         return isVaid;
     }
     orderHandler=(e)=>{
+        console.log('clicked')
         e.preventDefault()
        const formdata= {};
        for (let formid in this.state.orderForm){
@@ -129,9 +130,10 @@ class ContactData extends Component {
             const orders={
                 ingredients:this.props.ings,
                 price:this.props.price,
-                orderData:formdata
+                orderData:formdata,
+                userId:this.props.userId
             } 
-       this.props.onBurgerStart(orders)
+       this.props.onBurgerStart(orders,this.props.token)
       
        
            
@@ -202,13 +204,15 @@ const mapStateToProps=state=>{
     return{
         ings:state.burgerbuilder.ingredients,
         price:state.burgerbuilder.totalprice,
-        loading:state.order.loading
+        loading:state.order.loading,
+        token : state.auth.token,
+        userId:state.auth.userId
        
     }
 }
 const mapDispatchToProps = dispatch =>{
     return{
-        onBurgerStart: (orderData)=>dispatch(actions.purchaseBurger(orderData))
+        onBurgerStart: (orderData,token)=>dispatch(actions.purchaseBurger(orderData,token))
     }
 }
 

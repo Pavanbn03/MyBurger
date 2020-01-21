@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import * as actions from '../../store/actions/index';
 import {connect} from 'react-redux'
 import Spinner from '../../components/UI/Modal/Spinner/Spinner'
+import {Redirect} from 'react-router-dom'
 class Auth extends Component {
     state = { 
         controls:{
@@ -37,6 +38,11 @@ class Auth extends Component {
                 touched:false
         }
      },isSignUp:true
+    }
+    componentDidMount(){
+        if(!this.props.building && this.props.onSetAuthRedirectState!=='/'){
+            this.props.onSetAuthRedirect()
+        }
     }
     checkValidity(value,rule){
         let isVaid= true;
@@ -98,8 +104,7 @@ class Auth extends Component {
                 changed={(event)=>this.inputchangeHandler(event,formElement.id)}
                 invalid={!formElement.config.valid}
                 touched={formElement.config.touched}
-                />
-            
+                />   
         ))
         if(this.props.loading){
               form =<Spinner />  
@@ -108,17 +113,19 @@ class Auth extends Component {
         if (this.props.error){
             errormessage=(<p>{this.props.error.message}</p>);
         }
+        let authredirect=null;
+        if(this.props.isAuth){
+            authredirect=<Redirect to={this.props.onSetAuthRedirectState}/>
+        }
         return ( 
             <div className={classes.Auth}>
+                {authredirect}
                 {errormessage}
                 <form onSubmit={this.submitHandler}>
                 {form}
-                
                 <Button btnType="Success">SUBMIT</Button>
-                
                 </form>
-                
-                <Button btnType="Danger" clicked={this.switchmethod}>SWITCH TO {this.state.isSignUp ? 'SIGNIN' : 'SIGN  UP'}</Button>
+                <Button btnType="Danger" clicked={this.switchmethod}>SWITCH TO {this.state.isSignUp ? 'SIGNIN' : 'SIGNUP'}</Button>
             </div>
          );
     }
@@ -126,12 +133,16 @@ class Auth extends Component {
 const mapStateToProps = state =>{
     return{
         loading: state.auth.loading,
-        error: state.auth.error
+        error: state.auth.error,
+        isAuth:state.auth.token !==null,
+        building:state.burgerbuilder.building,
+        onSetAuthRedirectState:state.auth.redirectpath
     }
 }
 const mapDispatchToProps = dispatch =>{
     return{
-        onAuth : (email,password,isSignUp)=>dispatch(actions.auth(email,password,isSignUp))
+        onAuth : (email,password,isSignUp)=>dispatch(actions.auth(email,password,isSignUp)),
+        onSetAuthRedirect : ()=>dispatch(actions.setAuthRedirect('/'))
     }
 }
  

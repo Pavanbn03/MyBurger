@@ -1,5 +1,6 @@
 import React,{Component} from 'react';
 import AUX from '../../hoc/auxlilary';
+import {connect} from 'react-redux'
 import classes from './Layout.css'
 import ToolBar from '../Burger/Navigation/ToolBar/Toolbar';
 import SideDrawer from '../Burger/Navigation/SideDrawer/SideDrawer'
@@ -21,8 +22,8 @@ class Layout extends Component{
     render(){
         return(
             <AUX>
-    <ToolBar setsidebarHandler={this.setsidebarHandler} />
-    <SideDrawer open={this.state.showdrawer} closed={this.showbackdropclosed} />
+    <ToolBar isAuth={this.props.isAuthenticated} setsidebarHandler={this.setsidebarHandler} />
+    <SideDrawer isAuth={this.props.isAuthenticated} open={this.state.showdrawer} closed={this.showbackdropclosed} />
     <main className={classes.Content}>
         {this.props.children}
     </main>
@@ -30,4 +31,10 @@ class Layout extends Component{
         );
     }
 }  
-export default Layout;
+
+const mapStateToProps = state =>{
+    return{
+        isAuthenticated : state.auth.token !== null
+    }
+}
+export default connect(mapStateToProps)(Layout);
