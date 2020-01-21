@@ -1,13 +1,23 @@
-import React, { Component } from 'react';
+import React, { Component,Suspense } from 'react';
 import {Route, Switch, withRouter,Redirect} from 'react-router-dom'
 import Layout from './components/Layout/Layout';
 import BurgerBuilder from './containers/BurgerBuilder/BurgerBuilder';
-import Checkout from './containers/Checkout/Checkout'
-import Orders from './containers/Orders/Orders'
-import Auth from './components/Auth/Auth'
+// import Checkout from './containers/Checkout/Checkout'
+// import Orders from './containers/Orders/Orders'
+// import Auth from './components/Auth/Auth'
 import Logout from './containers/Logout/Logout'
 import * as actions from './store/actions/index';
 import {connect} from 'react-redux'
+
+const Checkout = React.lazy(()=>{
+  return import('./containers/Checkout/Checkout')
+})
+const Orders = React.lazy(()=>{
+  return import('./containers/Orders/Orders')
+})
+const Auth = React.lazy(()=>{
+  return import('./components/Auth/Auth')
+})
 class App extends Component {
   componentDidMount(){
     this.props.onTryAutoSignin()
@@ -15,18 +25,20 @@ class App extends Component {
   render() {
     let routes=(
       <Switch>
-          <Route path='/auth' component={Auth} />
+    
+          <Route path='/auth' render={()=><Auth />} />
           <Route path="/" exact component={BurgerBuilder} />
           <Redirect to ='/'/>
+        
       </Switch>
     )
     if(this.props.isAuth){
       routes=(
         <Switch>
-           <Route path="/checkout" component={Checkout} />
-          <Route path='/orders' component={Orders} />
+           <Route path="/checkout" render={()=><Checkout/>}/>
+          <Route path='/orders' render={()=><Orders />} />
           <Route path='/logout' component={Logout} />
-          <Route path='/auth' component={Auth} />
+      <Route path='/auth' render={()=><Auth /> }/>
           <Route path="/" exact component={BurgerBuilder} />
           <Redirect to ='/'/>
         </Switch>
@@ -35,7 +47,10 @@ class App extends Component {
     return (
       <div>
         <Layout>
-          {routes}
+          <Suspense fallback={<p>Loading...</p>}>
+            {routes}
+          </Suspense>
+          
         </Layout>
       </div>
     );
