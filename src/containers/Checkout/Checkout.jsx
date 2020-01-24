@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import CheckoutSummary from '../../components/Orders/CheckOutSummary/CheckOutSummary'
-import {Route,Redirect} from 'react-router-dom'
+import {Route,Redirect, withRouter} from 'react-router-dom'
 import ContactData from '../Checkout/Contact-data/Contactdata';
 import {connect} from 'react-redux';
 class Checkout extends Component {
@@ -10,7 +10,7 @@ class Checkout extends Component {
     }
     oncontinueHandler=()=>{
         
-        this.props.history.replace( '/checkout/contact-data' );
+        this.props.history.push('/checkout/contact-data' );
 
     }
 
@@ -24,6 +24,7 @@ class Checkout extends Component {
                 <div>
                     {purchasedRedirect}
                      <CheckoutSummary ingredients={this.props.ings} oncancel={this.oncancelHandler} oncontinue={this.oncontinueHandler}/>
+                     {console.log("Path: ",this.props)}
                      <Route path={this.props.match.path + '/contact-data'} component={ContactData} />
                 </div>
             )
@@ -40,4 +41,4 @@ const mapStateToProps=state=>{
     }
 }
 
-export default connect(mapStateToProps)(Checkout);
+export default withRouter(connect(mapStateToProps)(Checkout));

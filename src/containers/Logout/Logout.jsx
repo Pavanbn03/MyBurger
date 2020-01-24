@@ -5,7 +5,7 @@ import * as actions from '../../store/actions/index'
 class Logout extends Component {
     componentDidMount(){
         this.props.logout()
-    }
+          }
     render() { 
         return <Redirect to='/auth' />;
     }
